@@ -24,9 +24,14 @@ struct inode* find_inode_by_name( struct inode* parent, char* name )
     return NULL;
 }
 
-//gjør denne     først
 struct inode* load_inodes()
 {
+/* Read the file master_file_table and create an inode in memory
+ * for every inode that is stored in the file. Set the pointers
+ * between inodes correctly.
+ * The file master_file_table remains unchanged.
+ */
+    
     return NULL;
 }
 
