@@ -8,21 +8,23 @@
 
 #define BLOCKSIZE 4096
 
+///ttredje som må gjøre 
 struct inode* create_file( struct inode* parent, char* name, char readonly, int size_in_bytes )
 {
     return NULL;
 }
-
+//deenne som andre
 struct inode* create_dir( struct inode* parent, char* name )
 {
     return NULL;
 }
-
+//spar helt til sist, gjerne tenk effektivitet her
 struct inode* find_inode_by_name( struct inode* parent, char* name )
 {
     return NULL;
 }
 
+//gjør denne     først
 struct inode* load_inodes()
 {
     return NULL;

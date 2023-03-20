@@ -7,7 +7,7 @@
   - How to read master file:
   - Any implementation req that are not met
   - Deviations
-  - Any tests that fail and why we think so :)
+  - Any tests that fail and why we think so
 
 
 NOtater rundt metoder (fjernes før obliglevering)
