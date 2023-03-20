@@ -31,7 +31,16 @@ struct inode* load_inodes()
  * between inodes correctly.
  * The file master_file_table remains unchanged.
  */
-    
+    FILE *f;
+    //les id
+    //lagre navnets lengde 
+    //les navn
+    //leskat
+    //les read only
+    //les filstrsl
+    //les antall oppføringer
+    //les uintptr_t* som er selve oppføringene
+
     return NULL;
 }
 
