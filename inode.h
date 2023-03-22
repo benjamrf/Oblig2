@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//denne må være med for unitptr_t*
-#include <stdint.h>
+#include <inttypes.h>
 
 /* This is the inode structure as described in the
  * assignment.

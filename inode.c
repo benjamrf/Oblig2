@@ -7,6 +7,7 @@
 #include <errno.h>
 
 #define BLOCKSIZE 4096
+#define NODESIZE sizeof(struct inode)
 
 //global rotnode
 struct inode *rotnode = NULL;
@@ -20,12 +21,10 @@ struct inode* create_file( struct inode* parent, char* name, char readonly, int 
 //lager bare en struct på måten man gjør i oppgaver jeg har linket til.
 struct inode* create_dir( struct inode* parent, char* name )
 {
-    struct inode *in = malloc(sizeof(struct inode));
-    if(in == NULL){
-        fprintf(stderr, "malloc failed\n");
-        //shutdown()
-        exit(EXIT_FAILURE);
+    if(rotnode == NULL){
+        rotnode = parent;
     }
+
     return NULL;
 }
 //spar helt til sist, gjerne tenk effektivitet her
@@ -59,6 +58,7 @@ struct inode* load_inodes()
         //riktig?
         fread(&name_len,sizeof(int), 1, fil);
         //Malloc her
+        name = malloc(name_len);
         fread(name, sizeof(char), name_len, fil);
         fread(&is_reado, sizeof(char),1, fil);
         fread(&is_dir, sizeof(char), 1, fil);
@@ -66,7 +66,18 @@ struct inode* load_inodes()
         fread(&num_entries, sizeof(int), 1, fil);
         //iterere gjennom entries num_entries antall ganger for hver node og lese antal
         //bytes som trengs for structene
-        printf("%s", name);
+
+        int entry_bytes = 8 * num_entries; 
+        struct inode *new_node = malloc(sizeof(struct inode) + entry_bytes);
+        new_node->name = strdup(name);
+        for(int i = 0; i <num_entries; i++){
+            fread(entries, 8, 1, fil);
+            //rekursjonen må skje her
+        }
+        printf("%s\n", name);
+        //viktig å free her
+        free(name);
+
     }
 
     if(ferror(fil)){
@@ -76,7 +87,7 @@ struct inode* load_inodes()
     }
 
     fclose(fil);
-    return NULL;
+    return rotnode;
 }
 
 void fs_shutdown( struct inode* inode )
