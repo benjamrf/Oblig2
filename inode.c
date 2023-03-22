@@ -8,6 +8,9 @@
 
 #define BLOCKSIZE 4096
 
+//global rotnode
+struct inode *rotnode = NULL;
+
 ///ttredje som må gjøre 
 struct inode* create_file( struct inode* parent, char* name, char readonly, int size_in_bytes )
 {
@@ -17,7 +20,12 @@ struct inode* create_file( struct inode* parent, char* name, char readonly, int 
 //lager bare en struct på måten man gjør i oppgaver jeg har linket til.
 struct inode* create_dir( struct inode* parent, char* name )
 {
-
+    struct inode *in = malloc(sizeof(struct inode));
+    if(in == NULL){
+        fprintf(stderr, "malloc failed\n");
+        //shutdown()
+        exit(EXIT_FAILURE);
+    }
     return NULL;
 }
 //spar helt til sist, gjerne tenk effektivitet her
@@ -37,7 +45,8 @@ struct inode* load_inodes()
     int id, name_len, filesize, num_entries;
     char is_dir, is_reado;
     //må endres senmere for å legge på heapen med malloc
-    char name[256];
+    char *name;
+    uintptr_t entries;
 
     //oppdatere basert på alt av data hentet inn
     int size_bytes;
@@ -64,6 +73,16 @@ struct inode* load_inodes()
             rc = fread(&filesize, sizeof(int), 1, fil);
         }
         rc = fread(&num_entries, sizeof(int), 1, fil);
+        fread(&name_len,sizeof(int), 1, fil);
+        //Malloc her
+        fread(name, sizeof(char), name_len, fil);
+        fread(&is_reado, sizeof(char),1, fil);
+        fread(&is_dir, sizeof(char), 1, fil);
+        fread(&filesize, sizeof(int), 1, fil);
+        fread(&num_entries, sizeof(int), 1, fil);
+        //iterere gjennom entries num_entries antall ganger for hver node og lese antal
+        //bytes som trengs for structene
+        printf("%s", name);
         
     }
 
