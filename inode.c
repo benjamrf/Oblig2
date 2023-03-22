@@ -47,7 +47,6 @@ struct inode* load_inodes()
     //må endres senmere for å legge på heapen med malloc
     char *name;
     uintptr_t entries;
-
     //oppdatere basert på alt av data hentet inn
     int size_bytes;
     int rc;
@@ -58,21 +57,6 @@ struct inode* load_inodes()
     }
     while( (rc = fread(&id,sizeof(int), 1, fil))) {
         //riktig?
-        if(fread(&name_len,sizeof(int), 1, fil) == 0) break;
-        rc = fread(name, sizeof(char), name_len, fil);
-        //if(rc != name_len) break;
-        //name[name_len] = 0;
-        //create dir eller create file spørs på is_dir osv
-        //sjekk om is_reado er 0 eller 1
-        rc = fread(&is_reado, sizeof(char),1, fil);
-        rc = fread(&is_dir, sizeof(char), 1, fil);
-        if(is_dir){
-            //usiker på om dette ikke skal leses eller om det står 0 for hver fil 
-            filesize = 0;
-        }else if(!is_dir){
-            rc = fread(&filesize, sizeof(int), 1, fil);
-        }
-        rc = fread(&num_entries, sizeof(int), 1, fil);
         fread(&name_len,sizeof(int), 1, fil);
         //Malloc her
         fread(name, sizeof(char), name_len, fil);
@@ -83,7 +67,6 @@ struct inode* load_inodes()
         //iterere gjennom entries num_entries antall ganger for hver node og lese antal
         //bytes som trengs for structene
         printf("%s", name);
-        
     }
 
     if(ferror(fil)){
