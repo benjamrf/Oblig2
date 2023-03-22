@@ -52,7 +52,7 @@ struct inode* load_inodes()
         if(fread(&name_len,sizeof(int), 1, fil) == 0) break;
         rc = fread(name, sizeof(char), name_len, fil);
         //if(rc != name_len) break;
-        name[name_len] = 0;
+        //name[name_len] = 0;
         //create dir eller create file spørs på is_dir osv
         //sjekk om is_reado er 0 eller 1
         rc = fread(&is_reado, sizeof(char),1, fil);
