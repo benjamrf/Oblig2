@@ -23,6 +23,7 @@ struct inode
 	char       is_readonly;
 	int        filesize;
 	int        num_entries;
+	//array med ID-en til en annen inode dersom mappe
 	uintptr_t* entries;
 };
 
