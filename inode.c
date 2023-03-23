@@ -8,6 +8,7 @@
 
 #define BLOCKSIZE 4096
 #define NODESIZE sizeof(struct inode)
+#define ENTRYSIZE 8
 
 //global rotnode
 struct inode *rotnode = NULL;
@@ -32,6 +33,8 @@ struct inode* find_inode_by_name( struct inode* parent, char* name )
 {
     return NULL;
 }
+struct inode* create_node();
+//kan evt gjøres i metode for å få "ryddigere" kode 
 
 struct inode* load_inodes()
 {
@@ -45,7 +48,7 @@ struct inode* load_inodes()
     char is_dir, is_reado;
     //må endres senmere for å legge på heapen med malloc
     char *name;
-    uintptr_t entries;
+    uintptr_t *entries;
     //oppdatere basert på alt av data hentet inn
     int size_bytes;
     int rc;
@@ -55,27 +58,36 @@ struct inode* load_inodes()
         exit(EXIT_FAILURE);
     }
     while( (rc = fread(&id,sizeof(int), 1, fil))) {
+        struct inode *new_node = malloc(NODESIZE);
+        new_node-> id = id;
         //riktig?
         fread(&name_len,sizeof(int), 1, fil);
         //Malloc her
         name = malloc(name_len);
         fread(name, sizeof(char), name_len, fil);
-        fread(&is_reado, sizeof(char),1, fil);
+        new_node->name = strdup(name);
         fread(&is_dir, sizeof(char), 1, fil);
+        new_node->is_directory = is_dir;
+        fread(&is_reado, sizeof(char),1, fil);
+        new_node->is_readonly =is_reado;
         fread(&filesize, sizeof(int), 1, fil);
+        new_node->filesize = filesize;
         fread(&num_entries, sizeof(int), 1, fil);
+        new_node->num_entries = num_entries;
         //iterere gjennom entries num_entries antall ganger for hver node og lese antal
         //bytes som trengs for structene
-
         int entry_bytes = 8 * num_entries; 
-        struct inode *new_node = malloc(sizeof(struct inode) + entry_bytes);
-        new_node->name = strdup(name);
-        for(int i = 0; i <num_entries; i++){
-            fread(entries, 8, 1, fil);
-            //rekursjonen må skje her
+        if(is_dir){
+            new_node->entries = malloc(num_entries*ENTRYSIZE);
+            for(int i = 0; i <num_entries; i++){
+                fread(entries, 8, 1, fil);
+                uintptr_t *p = entries;
+                new_node->entries[i] = p;
+                frree(p);
+            }
         }
         printf("%s\n", name);
-        //viktig å free her
+        //free skal egt skje lenger opp dette er bare for visualisering enn så lenge
         free(name);
 
     }
